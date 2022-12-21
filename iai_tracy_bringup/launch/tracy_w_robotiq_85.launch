@@ -3,26 +3,24 @@
     <include file="$(find iai_tracy_description)/launch/upload.launch"></include>
 
     <include file="$(find ur_robot_driver)/launch/ur10e_bringup.launch" ns="left_arm">
-        <arg name="robot_ip" value="192.168.102.153"/>
+        <arg name="robot_ip" value="192.168.102.154"/>
         <arg name="tf_prefix" value="left_"/>
-        <arg name="kinematics_config" value="$(arg kinematics_config_left)"/>
         <arg name="controllers" value="joint_state_controller_left joint_group_vel_controller_left"/>
         <arg name="stopped_controllers" value="pos_joint_traj_controller_left"/>
         <arg name="hardware_interface_name" value="ur_hardware_interface_left"/>
-        <arg name="reverse_port" value="50016"/>
+        <arg name="reverse_port" value="50003"/>
         <arg name="script_sender_port" value="50011"/>
         <arg name="trajectory_port" value="50015"/>
         <arg name="script_command_port" value="50013"/>
     </include>
 
     <include file="$(find ur_robot_driver)/launch/ur10e_bringup.launch" ns="right_arm">
-        <arg name="robot_ip" value="192.168.102.154"/>
+        <arg name="robot_ip" value="192.168.102.153"/>
         <arg name="tf_prefix" value="right_"/>
-        <arg name="kinematics_config" value="$(arg kinematics_config_right)"/>
         <arg name="controllers" value="joint_state_controller_right joint_group_vel_controller_right"/>
         <arg name="stopped_controllers" value="pos_joint_traj_controller_right"/>
         <arg name="hardware_interface_name" value="ur_hardware_interface_right"/>
-        <arg name="reverse_port" value="50016"/>
+        <arg name="reverse_port" value="50002"/>
         <arg name="script_sender_port" value="50011"/>
         <arg name="trajectory_port" value="50015"/>
         <arg name="script_command_port" value="50013"/>
