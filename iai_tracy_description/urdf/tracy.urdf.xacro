@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="tracy">
+
+    <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro"/>
+    <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro" /> -->
+
+    <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+    <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+    <link name="world" />
+
+    <joint name="table_joint" type="fixed">
+        <parent link="world"/>
+        <child link="table"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="table">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iai_tracy_description/meshes/tracebot_setup_w_adapter_at_origin.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="package://iai_tracy_description/meshes/tracebot_setup_w_adapter_at_origin.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="left_arm_mount" />
+
+    <joint name="left_arm_joint" type="fixed">
+        <parent link="table"/>
+        <child link="left_arm_mount"/>
+        <origin xyz="0.135 0.050925 0.173" rpy="-1.0472 0.0 0.0" />
+    </joint>
+
+    <link name="right_arm_mount" />
+
+    <joint name="right_arm_joint" type="fixed">
+        <parent link="table"/>
+        <child link="right_arm_mount"/>
+        <origin xyz="0.135 -0.050925 0.173" rpy="1.0472 0.0 0.0" />
+    </joint>
+
+    <xacro:ur10e_robot prefix="left_" transmission_hw_interface="$(arg transmission_hw_interface)"/>
+    <xacro:ur10e_robot prefix="right_" transmission_hw_interface="$(arg transmission_hw_interface)"/>
+
+    <joint name="table_left_arm_joint" type="fixed">
+        <parent link="left_arm_mount" />
+        <child link = "left_base_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="table_right_arm_joint" type="fixed">
+        <parent link="right_arm_mount" />
+        <child link = "right_base_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
+    </joint>
+
+</robot>

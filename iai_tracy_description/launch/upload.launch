@@ -1,0 +1,6 @@
+<launch>
+    <arg name="urdf" default="$(find iai_tracy_description)/urdf/tracy.urdf.xacro"/>
+    <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg urdf)' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+</launch>
