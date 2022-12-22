@@ -34,7 +34,7 @@
         <arg name="reverse_port" value="50001"/>
         <arg name="script_sender_port" value="50002"/>
         <arg name="trajectory_port" value="5003"/>
-        <arg name="script_command_port" value="50004"/>
+        <arg name="script_command_port" value="50005"/>
     </include>
 
     <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
