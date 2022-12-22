@@ -54,13 +54,13 @@
     <joint name="table_left_arm_joint" type="fixed">
         <parent link="left_arm_mount" />
         <child link = "left_base_link" />
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
     </joint>
 
     <joint name="table_right_arm_joint" type="fixed">
         <parent link="right_arm_mount" />
         <child link = "right_base_link" />
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint>
 
 </robot>
