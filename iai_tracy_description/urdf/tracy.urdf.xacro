@@ -5,6 +5,8 @@
     <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro" /> -->
 
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+    <xacro:arg name="kinematics_config_left" default=""/>
+    <xacro:arg name="kinematics_config_right" default=""/>
     <xacro:property name="M_PI" value="3.1415926535897931"/>
 
     <link name="world" />
@@ -46,8 +48,8 @@
         <origin xyz="0.135 -0.050925 0.173" rpy="1.0472 0.0 0.0" />
     </joint>
 
-    <xacro:ur10e_robot prefix="left_" transmission_hw_interface="$(arg transmission_hw_interface)"/>
-    <xacro:ur10e_robot prefix="right_" transmission_hw_interface="$(arg transmission_hw_interface)"/>
+    <xacro:ur10e_robot prefix="left_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
+    <xacro:ur10e_robot prefix="right_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
 
     <joint name="table_left_arm_joint" type="fixed">
         <parent link="left_arm_mount" />

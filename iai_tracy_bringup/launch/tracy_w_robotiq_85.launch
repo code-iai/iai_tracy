@@ -1,29 +1,40 @@
 <launch>
+    <arg name="kinematics_config_left" default="$(find iai_tracy_ur)/include/iai_tracy_ur/left_ur10e_calibration.yaml" />
+    <arg name="kinematics_config_right" default="$(find iai_tracy_ur)/include/iai_tracy_ur/right_ur10e_calibration.yaml" />
 
-    <include file="$(find iai_tracy_description)/launch/upload.launch"></include>
+    <include file="$(find iai_tracy_description)/launch/upload.launch">
+        <arg name="kinematics_config_left" value="$(arg kinematics_config_left)"/>
+        <arg name="kinematics_config_right" value="$(arg kinematics_config_right)"/>
+    </include>
 
     <include file="$(find ur_robot_driver)/launch/ur10e_bringup.launch" ns="left_arm">
         <arg name="robot_ip" value="192.168.102.154"/>
         <arg name="tf_prefix" value="left_"/>
-        <arg name="controllers" value="joint_state_controller_left joint_group_vel_controller_left"/>
+        <arg name="controller_config_file" value="$(find iai_tracy_ur)/config/ur10e_controllers_left.yaml"/>
+        <arg name="controllers" value="joint_state_controller_left scaled_pos_joint_traj_controller_left"/>
         <arg name="stopped_controllers" value="pos_joint_traj_controller_left"/>
-        <arg name="hardware_interface_name" value="ur_hardware_interface_left"/>
-        <arg name="reverse_port" value="50003"/>
-        <arg name="script_sender_port" value="50011"/>
-        <arg name="trajectory_port" value="50015"/>
-        <arg name="script_command_port" value="50013"/>
+        <!-- <arg name="hardware_interface_name" value="$(find iai_tracy_ur)/include/iai_tracy_ur/left_ur10e_calibration.yaml"/>  -->
+        <arg name="kinematics_config" value="$(arg kinematics_config_left)"/>
+        <arg name="robot_description_file" value="$(find iai_tracy_description)/launch/upload.launch"/>
+        <arg name="reverse_port" value="50011"/>
+        <arg name="script_sender_port" value="50012"/>
+        <arg name="trajectory_port" value="50013"/>
+        <arg name="script_command_port" value="50014"/>
     </include>
 
     <include file="$(find ur_robot_driver)/launch/ur10e_bringup.launch" ns="right_arm">
         <arg name="robot_ip" value="192.168.102.153"/>
         <arg name="tf_prefix" value="right_"/>
-        <arg name="controllers" value="joint_state_controller_right joint_group_vel_controller_right"/>
+        <arg name="controller_config_file" value="$(find iai_tracy_ur)/config/ur10e_controllers_right.yaml"/>
+        <arg name="controllers" value="joint_state_controller_right scaled_pos_joint_traj_controller_right"/>
         <arg name="stopped_controllers" value="pos_joint_traj_controller_right"/>
-        <arg name="hardware_interface_name" value="ur_hardware_interface_right"/>
-        <arg name="reverse_port" value="50002"/>
-        <arg name="script_sender_port" value="50011"/>
-        <arg name="trajectory_port" value="50015"/>
-        <arg name="script_command_port" value="50013"/>
+        <!-- <arg name="hardware_interface_name" value="$(find iai_tracy_ur)/include/iai_tracy_ur/right_ur10e_calibration.yaml"/>  -->
+        <arg name="kinematics_config" value="$(arg kinematics_config_right)"/>
+        <arg name="robot_description_file" value="$(find iai_tracy_description)/launch/upload.launch"/>
+        <arg name="reverse_port" value="50001"/>
+        <arg name="script_sender_port" value="50002"/>
+        <arg name="trajectory_port" value="5003"/>
+        <arg name="script_command_port" value="50004"/>
     </include>
 
     <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
@@ -32,7 +43,7 @@
         - /right_arm/joint_states
         </rosparam>
         <param name="rate" value="120"/>
-        <param name="use_gui" value="true"/>
+        <param name="use_gui" value="false"/>
     </node>
 
     <!-- <node pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" name="joint_state_publisher_gui" output="screen" /> -->

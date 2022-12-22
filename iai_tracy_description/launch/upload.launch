@@ -1,6 +1,12 @@
 <launch>
     <arg name="urdf" default="$(find iai_tracy_description)/urdf/tracy.urdf.xacro"/>
     <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface" />
+    <arg name="kinematics_config_left" default="$(find iai_tracy_ur)/include/iai_tracy_ur/left_ur10e_calibration.yaml" />
+    <arg name="kinematics_config_right" default="$(find iai_tracy_ur)/include/iai_tracy_ur/right_ur10e_calibration.yaml" />
+    <arg name="kinematics_params" default="$(find ur_description)/config/ur5/default_kinematics.yaml"/>
 
-    <param name="robot_description" command="$(find xacro)/xacro '$(arg urdf)' transmission_hw_interface:=$(arg transmission_hw_interface)" />
+    <param name="robot_description" command="$(find xacro)/xacro '$(arg urdf)' 
+        transmission_hw_interface:=$(arg transmission_hw_interface) 
+        kinematics_config_left:=$(arg kinematics_config_left) 
+        kinematics_config_right:=$(arg kinematics_config_right)" />
 </launch>
