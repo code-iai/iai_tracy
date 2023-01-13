@@ -37,6 +37,11 @@
         <arg name="script_command_port" value="50005"/>
     </include>
 
+    <node pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py" name="right_gripper_driver" args="/dev/ttyUSB0" ns="right_gripper"/>
+
+    <node pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py" name="left_gripper_driver" args="/dev/ttyUSB1" ns="left_gripper"/>
+
+
     <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
         <rosparam param="source_list">
         - /left_arm/joint_states
