@@ -2,7 +2,7 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="tracy">
 
     <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro"/>
-    <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro" /> -->
+    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
 
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
     <xacro:arg name="kinematics_config_left" default=""/>
@@ -63,4 +63,17 @@
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint>
 
+    <xacro:robotiq_arg2f_85 prefix="left_"/>
+    <xacro:robotiq_arg2f_85 prefix="right_"/>
+
+    <joint name="right_wrist_gripper_joint" type="fixed">
+        <parent link="right_wrist_3_link" />
+        <child link = "right_robotiq_arg2f_base_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+    </joint>
+    <joint name="left_wrist_gripper_joint" type="fixed">
+        <parent link="left_wrist_3_link" />
+        <child link = "left_robotiq_arg2f_base_link" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+    </joint>
 </robot>
