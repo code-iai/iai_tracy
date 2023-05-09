@@ -2,20 +2,19 @@
 <robot xmlns:xacro="http://wiki.ros.org/xacro" name="tracy">
 
     <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro"/>
-    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
-
+    <xacro:include filename="$(find robotiq_2f_model)/model/robotiq_2f_85.urdf.xacro" />
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
-    <xacro:arg name="kinematics_config_left" default=""/>
-    <xacro:arg name="kinematics_config_right" default=""/>
+    <xacro:arg name="kinematics_config_left" default="/home/mineumann/work/development/PR2UnrealSimulator/src/iai_tracy/iai_tracy_ur/config/ur10e_controllers_left.yaml"/>
+    <xacro:arg name="kinematics_config_right" default="/home/mineumann/work/development/PR2UnrealSimulator/src/iai_tracy/iai_tracy_ur/config/ur10e_controllers_right.yaml"/>
     <xacro:property name="M_PI" value="3.1415926535897931"/>
 
-    <link name="world" />
+    <!-- <link name="world" /> -->
 
-    <joint name="table_joint" type="fixed">
-        <parent link="world"/>
-        <child link="table"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-    </joint>
+    <!-- <joint name="table_joint" type="fixed"> -->
+    <!--     <parent link="world"/> -->
+    <!--     <child link="table"/> -->
+    <!--     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" /> -->
+    <!-- </joint> -->
 
     <link name="table">
         <visual>
@@ -63,17 +62,23 @@
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint>
 
-    <xacro:robotiq_arg2f_85 prefix="left_"/>
-    <xacro:robotiq_arg2f_85 prefix="right_"/>
+    <xacro:robotiq_2f_85 parent="left_wrist_3_link"
+                         name="left_gripper">
+      <origin xyz="0 0 0" rpy="0 0 1.5708" />
+    </xacro:robotiq_2f_85>
+    <xacro:robotiq_2f_85 parent="right_wrist_3_link"
+                         name="right_gripper">
+          <origin xyz="0 0 0" rpy="0 0 1.5708" />
+    </xacro:robotiq_2f_85>
 
-    <joint name="right_wrist_gripper_joint" type="fixed">
-        <parent link="right_wrist_3_link" />
-        <child link = "right_robotiq_arg2f_base_link" />
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
-    </joint>
-    <joint name="left_wrist_gripper_joint" type="fixed">
-        <parent link="left_wrist_3_link" />
-        <child link = "left_robotiq_arg2f_base_link" />
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
-    </joint>
+    <!-- <joint name="right_wrist_gripper_joint" type="fixed"> -->
+    <!--     <parent link="right_wrist_3_link" /> -->
+    <!--     <child link = "right_robotiq_arg2f_base_link" /> -->
+    <!--     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" /> -->
+    <!-- </joint> -->
+    <!-- <joint name="left_wrist_gripper_joint" type="fixed"> -->
+    <!--     <parent link="left_wrist_3_link" /> -->
+    <!--     <child link = "left_robotiq_arg2f_base_link" /> -->
+    <!--     <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" /> -->
+    <!-- </joint> -->
 </robot>
