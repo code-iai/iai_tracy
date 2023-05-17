@@ -41,6 +41,18 @@
 
     <node pkg="robotiq_2f_gripper_control" type="Robotiq2FGripperRtuNode.py" name="left_gripper_driver" args="/dev/ttyUSB1" ns="left_gripper"/>
 
+    <node pkg="robotiq_2f_gripper_action_server" type="robotiq_2f_gripper_action_server_node" name="gripper_action_server_right">
+        <param name="gripper_name" value="right_gripper"/>
+        <remap from="input" to="/right_gripper/Robotiq2FGripperRobotInput"/>
+        <remap from="output" to="/right_gripper/Robotiq2FGripperRobotOutput"/>
+    </node>
+
+    <node pkg="robotiq_2f_gripper_action_server" type="robotiq_2f_gripper_action_server_node" name="gripper_action_server_left">
+        <param name="gripper_name" value="left"/>
+        <remap from="input" to="/left_gripper/Robotiq2FGripperRobotInput"/>
+        <remap from="output" to="/left_gripper/Robotiq2FGripperRobotOutput"/>
+    </node>
+
 
     <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
         <rosparam param="source_list">
