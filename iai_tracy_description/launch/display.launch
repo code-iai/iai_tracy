@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find iai_tracy_description)/launch/upload.launch" />
+
+  <!--Load robot in Rviz-->
+  <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
+
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
+    <param name="rate" value="120" />
+    <param name="use_gui" value="False" />
+  </node>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  <node name="rviz" pkg="rviz" type="rviz"/>
+</launch>
