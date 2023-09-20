@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 import sys
 from robotiq_2f_gripper_control.msg import Robotiq2FGripper_robot_input
@@ -6,9 +6,9 @@ from sensor_msgs.msg import JointState
 
 
 class RobotiqGripperJointStateConverter:
-    def __init__(self, name, joint_topic, joint_min, joint_max, joint_name):
+    def __init__(self, name, joint_topic, joint_min, joint_max, joint_name, input_ns):
         rospy.init_node(name)
-        rospy.Subscriber('Robotiq2FGripperRobotInput', Robotiq2FGripper_robot_input, self.callback)
+        rospy.Subscriber(input_ns + '/Robotiq2FGripperRobotInput', Robotiq2FGripper_robot_input, self.callback)
         self.pub = rospy.Publisher(joint_topic, JointState, queue_size=1)
         self.min = joint_min
         self.max = joint_max
@@ -29,6 +29,7 @@ if __name__ == '__main__':
                                       joint_topic=args[2],
                                       joint_min=float(args[3]),
                                       joint_max=float(args[4]),
-                                      joint_name=args[5])
+                                      joint_name=args[5],
+                                      input_ns=args[6])
     rospy.spin()
 
