@@ -53,8 +53,8 @@
         <remap from="output" to="/left_gripper/Robotiq2FGripperRobotOutput"/>
     </node>
 
-    <node pkg="iai_tracy_bringup" type="robotiqGripperJointStateConverter" name="leftGripperConverter" args="LeftConverter /left_gripper/joint_state 0 0.8 left_finger_joint left_gripper" />
-    <node pkg="iai_tracy_bringup" type="robotiqGripperJointStateConverter" name="rightGripperConverter" args="RightConverter /right_gripper/joint_state 0 0.8 right_finger_joint right_gripper" />
+    <node pkg="iai_tracy_bringup" type="robotiqGripperJointStateConverter.py" name="leftGripperConverter" args="LeftConverter /left_gripper/joint_state 0 0.8 left_finger_joint left_gripper" />
+    <node pkg="iai_tracy_bringup" type="robotiqGripperJointStateConverter.py" name="rightGripperConverter" args="RightConverter /right_gripper/joint_state 0 0.8 right_finger_joint right_gripper" />
 
     <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
         <rosparam param="source_list">
