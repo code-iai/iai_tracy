@@ -46,7 +46,7 @@
 
     <joint name="calibration_point_joint" type="fixed">
         <parent link="table"/>
-        <child link="calbration_point"/>
+        <child link="calibration_point"/>
         <origin xyz="0.69 0.0 0.0" rpy="0.0 -${M_PI} 0.0" />
     </joint>
 
@@ -58,6 +58,7 @@
         <origin xyz="0.30369 0.033467 -0.917308" rpy="0.332223 6.26796 4.68759" />
     </joint>
 
+    <link name="calibrated_camera_color_link"/>
 
     <joint name="camera_pole_joint" type="fixed">
         <parent link="table"/>
