@@ -50,15 +50,28 @@
         <origin xyz="0.69 0.0 0.0" rpy="0.0 -${M_PI} 0.0" />
     </joint>
 
+    <!-- This is the point against which the camera is calibrated-->
     <link name="calibration_point"/>
 
     <joint name="calibrated_camera_color_joint" type="fixed">
         <parent link="calibration_point"/>
         <child link="calibrated_camera_color_link"/>
-        <origin xyz="0.30369 0.033467 -0.917308" rpy="0.332223 6.26796 4.68759" />
+        <origin xyz="0.303693587994845 0.0334670668154926 -0.917308402826141" rpy="0.33222306128266654 6.2679616550776043 4.6875847864989133" />
     </joint>
 
+    <!-- This is the link which is calibrated against the calibration point-->
     <link name="calibrated_camera_color_link"/>
+
+    <joint name="calibrated_camera_joint" type="fixed">
+        <parent link="calibration_point"/>
+        <child link="camera_link"/>
+        <origin xyz="0.303321606346533 0.018473418567805 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" />
+    </joint>
+
+    <!-- This camera link is calculated from an offset of the calibrated link. The offset is calculated from the internal camera model.
+         It is used as an root link for the camera launch file to add all camera links to the world. This includes the camera_color_optical_frame which corresponds to the calibrated frame above-->
+    <link name="camera_link"/>
+
 
     <joint name="camera_pole_joint" type="fixed">
         <parent link="table"/>
@@ -127,11 +140,11 @@
 
    <joint name="camera_link_joint" type="fixed">
         <parent link="camera_mount"/>
-        <child link="camera_link"/>
+        <child link="camera_link2"/>
         <origin xyz="0.01 0.0 -0.026" rpy="0.0484812 1.25792843 0.057068" />
     </joint>
 
-    <link name="camera_link">
+    <link name="camera_link2">
         <collision>
             <material name="grey"/>
             <origin xyz="0 0 0.0" rpy="0 0 0"/>
