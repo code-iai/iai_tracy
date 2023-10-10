@@ -65,7 +65,9 @@
     <joint name="calibrated_camera_joint" type="fixed">
         <parent link="calibration_point"/>
         <child link="camera_link"/>
-        <origin xyz="0.303321606346533 0.018473418567805 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" />
+        <!-- <origin xyz="0.303321606346533 0.018473418567805 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" /> -->
+        <!-- Manually adjusted camera_link <-> calibration point offset. Detected markers showed a bit of shift on the y-axis of calibration_point. -->
+        <origin xyz="0.303321606346533 -0.0 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" />
     </joint>
 
     <!-- This camera link is calculated from an offset of the calibrated link. The offset is calculated from the internal camera model.
