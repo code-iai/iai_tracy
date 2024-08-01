@@ -12,12 +12,12 @@
     <xacro:arg name="kinematics_config_right" default=""/>
     <xacro:property name="M_PI" value="3.1415926535897931"/>
 
-    <link name="world" />
+    <link name="table_base_link" />
 
     <joint name="table_joint" type="fixed">
-        <parent link="world"/>
+        <parent link="table_base_link"/>
         <child link="table"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 1.0" rpy="0.0 0.0 0.0" />
     </joint>
 
     <link name="table">
@@ -65,9 +65,11 @@
     <joint name="calibrated_camera_joint" type="fixed">
         <parent link="calibration_point"/>
         <child link="camera_link"/>
-        <!-- <origin xyz="0.303321606346533 0.018473418567805 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" /> -->
+        <!--<origin xyz="0.303321606346533 0.018473418567805 -0.917080056865077" rpy="3.1722573891155394 5.0426076904779498 3.0896879692720898" />-->
         <!-- Manually adjusted camera_link <-> calibration point offset. Detected markers showed a bit of shift on the y-axis of calibration_point. -->
-        <origin xyz="0.303321606346533 -0.0 -0.917080056865077" rpy="3.1882399058998141 5.0449477449563940 3.0726935983898565" />
+        <!--<origin xyz="0.303321606346533 -0.0 -0.917080056865077" rpy="3.1722573891155394 5.0426076904779498 3.0896879692720898" />-->
+        <!-- new calibration vlaues from July24-->
+        <origin xyz="0.303763030131944 0.0301312512507701 -0.919836697465432" rpy="3.1931015118480244 5.0413108245636282 3.0939247568977319" />
     </joint>
 
     <!-- This camera link is calculated from an offset of the calibrated link. The offset is calculated from the internal camera model.
