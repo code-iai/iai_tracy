@@ -4,8 +4,8 @@
         <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
     </material>
 
-    <xacro:include filename="$(find ur_description)/urdf/inc/ur10e_macro.xacro"/>
-    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" />
+    <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+    <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" /> -->
 
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
     <xacro:arg name="kinematics_config_left" default=""/>
@@ -141,22 +141,54 @@
         <origin xyz="0.135 -0.050925 0.173" rpy="1.0472 0.0 0.0" />
     </joint>
 
-    <xacro:ur10e_robot prefix="left_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/>
-    <xacro:ur10e_robot prefix="right_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/>
+    <xacro:ur_robot
+     name="ur_left"
+     tf_prefix="left_"
+     parent="left_arm_mount"
+     joint_limits_parameters_file="$(find ur_description)/config/ur10e/joint_limits.yaml"
+     kinematics_parameters_file="$(find ur_description)/config/ur10e/default_kinematics.yaml"
+     physical_parameters_file="$(find ur_description)/config/ur10e/physical_parameters.yaml"
+     visual_parameters_file="$(find ur_description)/config/ur10e/visual_parameters.yaml"
+     safety_limits="false"
+     safety_pos_margin="0.15"
+     safety_k_position="20"
+     force_abs_paths="false"
+     >
+     <origin xyz="0 0 0" rpy="0 0 ${M_PI}" />  
+   </xacro:ur_robot>
 
-    <joint name="table_left_arm_joint" type="fixed">
+    <xacro:ur_robot
+     name="ur_right"
+     tf_prefix="right_"
+     parent="right_arm_mount"
+     joint_limits_parameters_file="$(find ur_description)/config/ur10e/joint_limits.yaml"
+     kinematics_parameters_file="$(find ur_description)/config/ur10e/default_kinematics.yaml"
+     physical_parameters_file="$(find ur_description)/config/ur10e/physical_parameters.yaml"
+     visual_parameters_file="$(find ur_description)/config/ur10e/visual_parameters.yaml"
+     safety_limits="false"
+     safety_pos_margin="0.15"
+     safety_k_position="20"
+     force_abs_paths="false"
+     >
+     <origin xyz="0 0 0" rpy="0 0 0" />  
+   </xacro:ur_robot>
+
+    <!-- <xacro:ur10e_robot prefix="left_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_left)"/> -->
+    <!-- <xacro:ur10e_robot prefix="right_" transmission_hw_interface="$(arg transmission_hw_interface)" kinematics_parameters_file="$(arg kinematics_config_right)"/> -->
+
+    <!-- <joint name="table_left_arm_joint" type="fixed">
         <parent link="left_arm_mount" />
         <child link = "left_base_link" />
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
-    </joint>
+    </joint> -->
 
-    <joint name="table_right_arm_joint" type="fixed">
+    <!-- <joint name="table_right_arm_joint" type="fixed">
         <parent link="right_arm_mount" />
         <child link = "right_base_link" />
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-    </joint>
+    </joint> -->
 
-    <xacro:robotiq_arg2f_85 prefix="left_"/>
+    <!-- <xacro:robotiq_arg2f_85 prefix="left_"/>
     <xacro:robotiq_arg2f_85 prefix="right_"/>
 
     <joint name="right_wrist_gripper_joint" type="fixed">
@@ -184,5 +216,5 @@
         <origin xyz="0.0 0.0 0.144" rpy="0.0 0.0 0" />
     </joint>
 
-    <link name="r_gripper_tool_frame" />
+    <link name="r_gripper_tool_frame" /> -->
 </robot>
