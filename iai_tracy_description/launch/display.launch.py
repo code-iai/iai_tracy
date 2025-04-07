@@ -33,7 +33,7 @@ def generate_launch_description():
             package='rviz2',
             executable='rviz2',
             name='rviz2',
-            arguments=['--display-config', rviz_file],
-            output='screen'
+            arguments=['-d', rviz_file],
+            output='log'
         )
     ])
