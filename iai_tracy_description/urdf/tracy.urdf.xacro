@@ -5,7 +5,10 @@
     </material>
 
     <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
-    <!-- <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" /> -->
+    <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
+
+
+   <!--<xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" /> -->
 
     <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
     <xacro:arg name="kinematics_config_left" default=""/>
@@ -17,7 +20,7 @@
     <joint name="table_joint" type="fixed">
         <parent link="world"/>
         <child link="table"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.88" rpy="0.0 0.0 0.0" />
     </joint>
 
     <link name="table">
@@ -188,8 +191,17 @@
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint> -->
 
+    <xacro:robotiq_gripper name="left_gripper" prefix="left_" parent="left_wrist_3_link">
+       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+    </xacro:robotiq_gripper>
+
+    <xacro:robotiq_gripper name="right_gripper" prefix="right_" parent="right_wrist_3_link">
+       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+    </xacro:robotiq_gripper>
+
+
+
     <!-- <xacro:robotiq_arg2f_85 prefix="left_"/>
-    <xacro:robotiq_arg2f_85 prefix="right_"/>
 
     <joint name="right_wrist_gripper_joint" type="fixed">
         <parent link="right_wrist_3_link" />
