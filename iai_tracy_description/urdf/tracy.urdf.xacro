@@ -15,10 +15,10 @@
     <xacro:arg name="kinematics_config_right" default=""/>
     <xacro:property name="M_PI" value="3.1415926535897931"/>
 
-    <link name="world" />
+    <link name="map" />
 
     <joint name="table_joint" type="fixed">
-        <parent link="world"/>
+        <parent link="map"/>
         <child link="table"/>
         <origin xyz="0.0 0.0 0.88" rpy="0.0 0.0 0.0" />
     </joint>
@@ -178,11 +178,11 @@
 
 
     <xacro:robotiq_gripper name="left_gripper" prefix="left_" parent="left_wrist_3_link">
-       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </xacro:robotiq_gripper>
 
     <xacro:robotiq_gripper name="right_gripper" prefix="right_" parent="right_wrist_3_link">
-       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 1.57" />
+       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </xacro:robotiq_gripper>
 
     <joint name="l_gripper_tool_frame_joint" type="fixed">
