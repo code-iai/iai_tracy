@@ -1,0 +1,151 @@
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
+from launch.substitutions import Command, FindExecutable, LaunchConfiguration
+from launch_ros.actions import Node, PushRosNamespace
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+import os
+
+def generate_launch_description():
+    # Launch args for IPs
+    left_ip = LaunchConfiguration('left_robot_ip')
+    right_ip = LaunchConfiguration('right_robot_ip')
+
+    tracy_xacro_file = os.path.join(get_package_share_directory('iai_tracy_description'), 'urdf',
+                                     'tracy.urdf.xacro')
+    robot_description = Command(
+        [FindExecutable(name='xacro'), ' ', tracy_xacro_file])
+
+    return LaunchDescription([
+        DeclareLaunchArgument('left_robot_ip', default_value='192.168.102.154'),
+        DeclareLaunchArgument('right_robot_ip', default_value='192.168.102.153'),
+
+        # LEFT ARM
+        GroupAction([
+            PushRosNamespace('left_arm'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'launch',
+                        'iai_ur_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'robot_ip': left_ip,
+                    'use_fake_hardware': 'false',
+                    'ur_type': 'ur10e',
+                    'tf_prefix': 'left_',
+                    'initial_joint_controller': 'forward_velocity_controller',
+                    'launch_rviz': 'false',
+                    'reverse_port': '50011',
+                    'script_sender_port': '50012',
+                    'trajectory_port': '50013',
+                    'script_command_port': '50014',
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_ur'),
+                        'config',
+                        'ur10e_controllers_left.yaml'
+                    ),
+                }.items()
+            ),
+        ]),
+
+        # RIGHT ARM
+        GroupAction([
+            PushRosNamespace('right_arm'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'launch',
+                        'iai_ur_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'robot_ip': right_ip,
+                    'use_fake_hardware': 'false',
+                    'ur_type': 'ur10e',
+                    'tf_prefix': 'right_',
+                    'initial_joint_controller': 'forward_velocity_controller',
+                    'launch_rviz': 'false',
+                    'reverse_port': '50001',
+                    'script_sender_port': '50002',
+                    'trajectory_port': '5003',
+                    'script_command_port': '50005',
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_ur'),
+                        'config',
+                        'ur10e_controllers_right.yaml'
+                    ),
+                }.items()
+            ),
+        ]),
+        GroupAction([
+            PushRosNamespace('left_gripper'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('robotiq_description'),
+                        'launch',
+                        'robotiq_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'com_port': '/dev/ttyUSB1',
+                    'tf_prefix': 'left_',
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'config',
+                        'robotiq_gripper_controllers_left.yaml'
+                    )
+                }.items(),
+            )
+        ]),
+        GroupAction([
+            PushRosNamespace('right_gripper'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('robotiq_description'),
+                        'launch',
+                        'robotiq_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'com_port': '/dev/ttyUSB0',
+                    'tf_prefix': 'right_',
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'config',
+                        'robotiq_gripper_controllers_right.yaml'
+                    )
+                }.items(),
+            )
+        ]),
+
+        # JOINT STATE PUBLISHER (merged)
+        Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher',
+            output='screen',
+            parameters=[{
+                'source_list': [
+                    '/left_arm/joint_states',
+                    '/right_arm/joint_states',
+                    '/left_gripper/joint_states',
+                    '/right_gripper/joint_states'
+                ],
+                'rate': 120.0,
+                'use_gui': False,
+            }]
+        ),
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[{'robot_description': robot_description}]
+        )
+    ])

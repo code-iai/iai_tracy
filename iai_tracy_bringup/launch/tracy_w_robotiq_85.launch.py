@@ -24,19 +24,11 @@ def generate_launch_description():
         kinematics_config_right,
 
         # Include the iai_tracy_description launch file
-        Node(
-            package='iai_tracy_description',
-            executable='upload.launch',
-            name='upload_description',
-            parameters=[
-                {'kinematics_config_left': kinematics_config_left, 'kinematics_config_right': kinematics_config_right}
-            ]
-        ),
         
         # Include the ur_robot_driver for the left arm
         Node(
             package='ur_robot_driver',
-            executable='ur10e_bringup.launch',
+            executable='ur_control.launch',
             namespace='left_arm',
             arguments=[
                 'robot_ip:=192.168.102.154',
@@ -56,7 +48,7 @@ def generate_launch_description():
         # Include the ur_robot_driver for the right arm
         Node(
             package='ur_robot_driver',
-            executable='ur10e_bringup.launch',
+            executable='ur_control.launch',
             namespace='right_arm',
             arguments=[
                 'robot_ip:=192.168.102.153',
