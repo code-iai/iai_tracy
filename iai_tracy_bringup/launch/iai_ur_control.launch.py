@@ -143,7 +143,7 @@ def launch_setup(context):
                     "force_torque_sensor_broadcaster",
                     "joint_state_broadcaster",
                     "speed_scaling_state_broadcaster",
-                    "tcp_pose_broadcaster",
+                    # "tcp_pose_broadcaster",
                     "ur_configuration_controller",
                 ]
             },
@@ -180,7 +180,7 @@ def launch_setup(context):
         "io_and_status_controller",
         "speed_scaling_state_broadcaster",
         "force_torque_sensor_broadcaster",
-        "tcp_pose_broadcaster",
+        # "tcp_pose_broadcaster",
         "ur_configuration_controller",
     ]
     controllers_inactive = [
@@ -290,7 +290,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "description_launchfile",
             default_value=PathJoinSubstitution(
-                [FindPackageShare("ur_robot_driver"), "launch", "ur_rsp.launch.py"]
+                [FindPackageShare("iai_tracy_bringup"), "launch", "iai_ur_rsp.launch.py"]
             ),
             description="Launchfile (absolute path) providing the description. "
             "The launchfile has to start a robot_state_publisher node that "

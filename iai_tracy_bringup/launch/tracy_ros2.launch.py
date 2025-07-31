@@ -137,8 +137,7 @@ def generate_launch_description():
                     '/left_gripper/joint_states',
                     '/right_gripper/joint_states'
                 ],
-                'rate': 120.0,
-                'use_gui': False,
+                'rate': 100.0,
             }]
         ),
         Node(
@@ -146,6 +145,7 @@ def generate_launch_description():
             executable='robot_state_publisher',
             name='robot_state_publisher',
             output='screen',
+            remappings=[('/joint_states', '/asdf')],# remapping to asdf because the RSP should only publish static transforms
             parameters=[{'robot_description': robot_description}]
         )
     ])

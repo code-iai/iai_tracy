@@ -144,10 +144,18 @@
         <origin xyz="0.135 -0.050925 0.173" rpy="1.0472 0.0 0.0" />
     </joint>
 
+    <link name="left_world" />
+
+    <joint name="left_world_joint" type="fixed">
+        <parent link="left_arm_mount"/>
+        <child link="left_world"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
+    </joint>
+
     <xacro:ur_robot
      name="ur_left"
      tf_prefix="left_"
-     parent="left_arm_mount"
+     parent="left_world"
      joint_limits_parameters_file="$(find ur_description)/config/ur10e/joint_limits.yaml"
      kinematics_parameters_file="$(find ur_description)/config/ur10e/default_kinematics.yaml"
      physical_parameters_file="$(find ur_description)/config/ur10e/physical_parameters.yaml"
@@ -157,13 +165,21 @@
      safety_k_position="20"
      force_abs_paths="false"
      >
-     <origin xyz="0 0 0" rpy="0 0 ${M_PI}" />  
+     <origin xyz="0 0 0" rpy="0 0 0" />
    </xacro:ur_robot>
+
+    <link name="right_world" />
+
+    <joint name="right_world_joint" type="fixed">
+        <parent link="right_arm_mount"/>
+        <child link="right_world"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
 
     <xacro:ur_robot
      name="ur_right"
      tf_prefix="right_"
-     parent="right_arm_mount"
+     parent="right_world"
      joint_limits_parameters_file="$(find ur_description)/config/ur10e/joint_limits.yaml"
      kinematics_parameters_file="$(find ur_description)/config/ur10e/default_kinematics.yaml"
      physical_parameters_file="$(find ur_description)/config/ur10e/physical_parameters.yaml"
