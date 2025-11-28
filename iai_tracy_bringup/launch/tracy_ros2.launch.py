@@ -124,6 +124,25 @@ def generate_launch_description():
             )
         ]),
 
+        # Camera
+        GroupAction([
+            PushRosNamespace('tracy_camera'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('realsense2_camera'),
+                        'launch',
+                        'rs_launch.py'
+                    )
+                ])
+                # launch_arguments={
+                #     'arg1_name': 'arg1_value',  # <<< CHANGE or REMOVE
+                #     'arg2_name': 'arg2_value',  # <<< CHANGE or REMOVE
+                #     # Add more launch arguments as needed
+                # }.items(),
+            )
+        ]),
+
         # JOINT STATE PUBLISHER (merged)
         Node(
             package='joint_state_publisher',
