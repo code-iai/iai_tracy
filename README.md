@@ -3,6 +3,10 @@
 ## Building the URDF 
 You need the ur_description from here: https://github.com/UniversalRobots/Universal_Robots_ROS2_Description/tree/jazzy
 (Make sure you are on the correct branch)
+or install it with apt
+```bash
+sudo apt install ros-jazzy-ur-description
+```
 
 The repo for the gripper can be found here: https://github.com/maltehue/ros2_robotiq_gripper/tree/iai_dualarm
 
