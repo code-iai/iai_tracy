@@ -7,8 +7,12 @@ find_package(std_msgs REQUIRED)
 find_package(ament_cmake REQUIRED)
 
 # Install directories (if there are specific resources to install)
-install(DIRECTORY config include
+install(DIRECTORY include
   DESTINATION share/${PROJECT_NAME}
+)
+
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
 )
 
 ament_package()

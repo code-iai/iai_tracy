@@ -18,3 +18,8 @@
 /right_gripper/robotiq_activation_controller:
   ros__parameters:
     default: true
+
+/right_gripper/joint_state_broadcaster:
+  ros__parameters:
+    extra_interfaces:
+      - object_detection_status

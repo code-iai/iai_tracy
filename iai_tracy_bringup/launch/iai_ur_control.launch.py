@@ -67,6 +67,7 @@ def launch_setup(context):
     use_tool_communication = LaunchConfiguration("use_tool_communication")
     tool_device_name = LaunchConfiguration("tool_device_name")
     tool_tcp_port = LaunchConfiguration("tool_tcp_port")
+    kinematics_params_file = LaunchConfiguration("kinematics_params_file")
 
     control_node = Node(
         package="controller_manager",
@@ -210,6 +211,7 @@ def launch_setup(context):
         launch_arguments={
             "robot_ip": robot_ip,
             "ur_type": ur_type,
+            "kinematics_params_file": kinematics_params_file,
         }.items(),
     )
 
@@ -496,6 +498,16 @@ def generate_launch_description():
                 LaunchConfiguration("ur_type"),
                 "_update_rate.yaml",
             ],
+        )
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "kinematics_params_file",
+            default_value=PathJoinSubstitution(
+                [FindPackageShare("ur_description"), "config", LaunchConfiguration("ur_type"),
+                 "default_kinematics.yaml"]
+            ),
+            description="The calibration configuration of the actual robot used.",
         )
     )
     return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])

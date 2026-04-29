@@ -13,8 +13,18 @@ def generate_launch_description():
 
     tracy_xacro_file = os.path.join(get_package_share_directory('iai_tracy_description'), 'urdf',
                                      'tracy.urdf.xacro')
-    robot_description = Command(
-        [FindExecutable(name='xacro'), ' ', tracy_xacro_file])
+
+    left_kinematics = os.path.join(
+        get_package_share_directory('iai_tracy_ur'), 'config', 'left_arm_calibration.yaml')
+
+    right_kinematics = os.path.join(
+        get_package_share_directory('iai_tracy_ur'), 'config', 'right_arm_calibration.yaml')
+
+    robot_description = Command([
+        FindExecutable(name='xacro'), ' ', tracy_xacro_file,
+        ' kinematics_config_left:=', left_kinematics,
+        ' kinematics_config_right:=', right_kinematics,
+    ])
 
     return LaunchDescription([
         DeclareLaunchArgument('left_robot_ip', default_value='192.168.102.154'),
@@ -42,6 +52,7 @@ def generate_launch_description():
                     'script_sender_port': '50012',
                     'trajectory_port': '50013',
                     'script_command_port': '50014',
+                    'kinematics_params_file': left_kinematics,
                     'controllers_file': os.path.join(
                         get_package_share_directory('iai_tracy_ur'),
                         'config',
@@ -73,6 +84,7 @@ def generate_launch_description():
                     'script_sender_port': '50002',
                     'trajectory_port': '5003',
                     'script_command_port': '50005',
+                    'kinematics_params_file': right_kinematics,
                     'controllers_file': os.path.join(
                         get_package_share_directory('iai_tracy_ur'),
                         'config',
@@ -134,12 +146,12 @@ def generate_launch_description():
                         'launch',
                         'rs_launch.py'
                     )
-                ])
-                # launch_arguments={
-                #     'arg1_name': 'arg1_value',  # <<< CHANGE or REMOVE
-                #     'arg2_name': 'arg2_value',  # <<< CHANGE or REMOVE
+                ]),
+                launch_arguments={
+                     'depth_module.depth_profile': '1280x720x30',  # <<< CHANGE or REMOVE
+                     'rgb_camera.color_profile': '1280x720x30',  # <<< CHANGE or REMOVE
                 #     # Add more launch arguments as needed
-                # }.items(),
+                }.items(),
             )
         ]),
 
