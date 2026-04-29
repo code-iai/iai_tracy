@@ -172,7 +172,7 @@ def generate_launch_description():
                'enable_noise_removal_filter': 'True',
                'noise_removal_filter_min_diff': '3',
            }.items()
-       ),
+        ),
 
         # JOINT STATE PUBLISHER (merged)
         Node(
