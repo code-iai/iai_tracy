@@ -6,6 +6,7 @@
 
     <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
     <xacro:include filename="$(find robotiq_description)/urdf/robotiq_2f_85_macro.urdf.xacro"/>
+    <!-- <xacro:include filename="$(find realsense2_description)/urdf/_d435i.urdf.xacro"/> -->
 
 
    <!--<xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model_macro.xacro" /> -->
@@ -128,6 +129,15 @@
             </geometry>
         </collision>
     </link>
+
+    <!-- We've switched to the orbbec camera. Do not use the realsense camera.
+    <xacro:sensor_d435i 
+      parent="camera_mount"
+      name="camera"
+      use_nominal_extrinsics="true">
+      <origin xyz="0 0 0" rpy="0.0484812 1.25792843 0.057068"/>
+    </xacro:sensor_d435i>
+    -->
 
     <link name="left_arm_mount" />
 
