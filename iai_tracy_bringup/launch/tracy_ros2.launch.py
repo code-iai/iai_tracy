@@ -26,6 +26,11 @@ def generate_launch_description():
         ' kinematics_config_right:=', right_kinematics,
     ])
 
+    # Get the orbbec_camera package directory
+    orbbec_share_dir = get_package_share_directory('orbbec_camera')
+    orbbec_launch_dir = os.path.join(orbbec_share_dir, 'launch')
+
+
     return LaunchDescription([
         DeclareLaunchArgument('left_robot_ip', default_value='192.168.102.154'),
         DeclareLaunchArgument('right_robot_ip', default_value='192.168.102.153'),
@@ -137,23 +142,37 @@ def generate_launch_description():
         ]),
 
         # Camera
-        GroupAction([
-            PushRosNamespace('tracy_camera'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    os.path.join(
-                        get_package_share_directory('realsense2_camera'),
-                        'launch',
-                        'rs_launch.py'
-                    )
-                ]),
-                launch_arguments={
-                     'depth_module.depth_profile': '1280x720x30',  # <<< CHANGE or REMOVE
-                     'rgb_camera.color_profile': '1280x720x30',  # <<< CHANGE or REMOVE
-                #     # Add more launch arguments as needed
-                }.items(),
-            )
-        ]),
+        #GroupAction([
+        #    PushRosNamespace('tracy_camera'),
+        #    IncludeLaunchDescription(
+        #        PythonLaunchDescriptionSource([
+        #            os.path.join(
+        #                get_package_share_directory('realsense2_camera'),
+        #                'launch',
+        #                'rs_launch.py'
+        #            )
+        #        ]),
+        #        launch_arguments={
+        #             'depth_module.depth_profile': '1280x720x30',  # <<< CHANGE or REMOVE
+        #             'rgb_camera.color_profile': '1280x720x30',  # <<< CHANGE or REMOVE
+        #        #     # Add more launch arguments as needed
+        #        }.items(),
+        #    )
+        #]),
+        # Orbbec Camera
+        IncludeLaunchDescription(
+           PythonLaunchDescriptionSource(
+               os.path.join(orbbec_launch_dir, 'femto_mega.launch.py')
+           ),
+           launch_arguments={
+               'color_width': '1920',
+               'color_height': '1080',
+               'depth_registration': 'True',
+               'enable_colored_point_cloud': 'True',
+               'enable_noise_removal_filter': 'True',
+               'noise_removal_filter_min_diff': '3',
+           }.items()
+       ),
 
         # JOINT STATE PUBLISHER (merged)
         Node(
