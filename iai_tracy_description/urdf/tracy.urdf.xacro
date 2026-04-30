@@ -105,19 +105,10 @@
         </collision>
     </link>
 
-    <joint name="camera_mount_joint" type="fixed">
-        <parent link="camera_pole"/>
-        <child link="camera_mount"/>
-	    <!-- <origin xyz="0.0 0.0 0.92" rpy="0.0 0.0 0.0" /> -->
-        <origin xyz="0.012066 -0.036398 0.929310" rpy="-0.031112 -0.077993 -0.011774"/>
-    </joint>
-
-    <link name="camera_mount"/>
-
     <joint name="camera_link_joint" type="fixed">
-        <parent link="camera_mount"/>
+        <parent link="camera_pole"/>
         <child link="camera_link"/>
-	<origin xyz="0.01 0.0 -0.026" rpy="0.0484812 1.34792843 0.057068" />
+        <origin xyz="0.019787 -0.005129 0.922215" rpy="-0.067670 1.375065 -0.073038"/>
     </joint>
 
     <link name="camera_link">
