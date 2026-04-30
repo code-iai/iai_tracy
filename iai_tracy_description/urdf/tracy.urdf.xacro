@@ -106,9 +106,9 @@
     </link>
 
     <joint name="camera_link_joint" type="fixed">
-        <parent link="camera_pole"/>
+        <parent link="table"/>
         <child link="camera_link"/>
-        <origin xyz="0.019787 -0.005129 0.922215" rpy="-0.067670 1.375065 -0.073038"/>
+        <origin xyz="0.410542 -0.015143 0.932933" rpy="-0.046277 1.378820 -0.050299"/>
     </joint>
 
     <link name="camera_link">
