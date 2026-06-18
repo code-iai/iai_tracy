@@ -1,98 +1,180 @@
-import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.conditions import IfCondition, UnlessCondition
+from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
 from launch.substitutions import Command, FindExecutable, LaunchConfiguration
-from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
-from launch_ros.substitutions import FindPackageShare
-import serial.tools.list_ports
-
-def get_ports():
-    """Finds all ports with Robotiq/Espressif HWIDs, sorted for stability."""
-    devs = sorted([p.device for p in serial.tools.list_ports.comports() if any(h in p.hwid for h in ["303A", "0403"])])
-    dev_1 = devs[0] if len(devs) > 0 else "/dev/ttyACM0"
-    dev_2 = devs[1] if len(devs) > 1 else "/dev/ttyACM1"
-    return dev_1, dev_2
+from launch_ros.actions import Node, PushRosNamespace
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+import os
 
 def generate_launch_description():
-    dev_1, dev_2 = get_ports()
+    # Launch args for IPs
+    left_ip = LaunchConfiguration('left_robot_ip')
+    right_ip = LaunchConfiguration('right_robot_ip')
 
-    is_dual = LaunchConfiguration("is_dual")
-    gripper_type = LaunchConfiguration("gripper_type")
-    model = LaunchConfiguration("model")
-    use_fake_hardware = LaunchConfiguration("use_fake_hardware")
-    controller_config = LaunchConfiguration("controller_config")
+    tracy_xacro_file = os.path.join(get_package_share_directory('iai_tracy_description'), 'urdf',
+                                     'tracy.urdf.xacro')
 
-    args = [
-        DeclareLaunchArgument("gripper_type", default_value="140", choices=["85", "140"], 
-                              description="Type of gripper: '85' or '140'"),
-        DeclareLaunchArgument("is_dual", default_value="false", 
-                              description="Set to 'true' to launch dual grippers"),
-        DeclareLaunchArgument("model", default_value=[
-            FindPackageShare("robotiq_description"), 
-            "/urdf/robotiq_2f_", gripper_type, "_gripper.urdf.xacro"
-        ]),
-        DeclareLaunchArgument("controller_config", default_value=[
-            FindPackageShare("robotiq_description"), 
-            "/config/robotiq_controllers_", gripper_type, ".yaml"
-        ], description="Path to the controller configuration YAML file"),
-        
-        DeclareLaunchArgument("com_port", default_value=dev_1),
-        DeclareLaunchArgument("use_fake_hardware", default_value="false"),
-        DeclareLaunchArgument("tf_prefix", default_value=""),
-        DeclareLaunchArgument("com_port_left", default_value=dev_1),
-        DeclareLaunchArgument("com_port_right", default_value=dev_2),
-    ]
+    left_kinematics = os.path.join(
+        get_package_share_directory('iai_tracy_ur'), 'config', 'left_arm_calibration.yaml')
 
-    nodes = []
-    
-    # SINGLE GRIPPER SETUP
+    right_kinematics = os.path.join(
+        get_package_share_directory('iai_tracy_ur'), 'config', 'right_arm_calibration.yaml')
 
-    robot_desc_single = ParameterValue(Command([
-        FindExecutable(name="xacro"), " ", model,
-        " use_fake_hardware:=", use_fake_hardware, " com_port:=", LaunchConfiguration("com_port"),
-        " prefix:=", LaunchConfiguration("tf_prefix")
-    ]), value_type=str)
-
-    nodes.extend([
-        Node(package="controller_manager", executable="ros2_control_node", 
-             parameters=[{"robot_description": robot_desc_single}, controller_config], 
-             output="screen", condition=UnlessCondition(is_dual)),
-             
-        Node(package="robot_state_publisher", executable="robot_state_publisher", 
-             parameters=[{"robot_description": robot_desc_single}], 
-             output="screen", condition=UnlessCondition(is_dual))
+    robot_description = Command([
+        FindExecutable(name='xacro'), ' ', tracy_xacro_file,
+        ' kinematics_config_left:=', left_kinematics,
+        ' kinematics_config_right:=', right_kinematics,
     ])
 
-    for ctrl in ["joint_state_broadcaster", "robotiq_gripper_controller", "robotiq_activation_controller"]:
-        nodes.append(Node(package="controller_manager", executable="spawner", 
-                          arguments=[ctrl], condition=UnlessCondition(is_dual)))
+    # Get the orbbec_camera package directory
+    orbbec_share_dir = get_package_share_directory('orbbec_camera')
+    orbbec_launch_dir = os.path.join(orbbec_share_dir, 'launch')
 
-    # DUAL GRIPPER SETUP
 
-    for side, port in [("left", "com_port_left"), ("right", "com_port_right")]:
-        prefix = f"{side}_"
-        
-        desc_dual = ParameterValue(Command([
-            FindExecutable(name="xacro"), " ", model,
-            " use_fake_hardware:=", use_fake_hardware, " com_port:=", LaunchConfiguration(port), 
-            " prefix:=", prefix
-        ]), value_type=str)
+    return LaunchDescription([
+        DeclareLaunchArgument('left_robot_ip', default_value='192.168.102.154'),
+        DeclareLaunchArgument('right_robot_ip', default_value='192.168.102.153'),
 
-        nodes.extend([
-            Node(package="controller_manager", executable="ros2_control_node", 
-                 namespace=f"{side}_gripper", parameters=[{"robot_description": desc_dual}, controller_config], 
-                 condition=IfCondition(is_dual)),
-                 
-            Node(package="robot_state_publisher", executable="robot_state_publisher", 
-                 namespace=f"{side}_gripper", parameters=[{"robot_description": desc_dual}], 
-                 condition=IfCondition(is_dual))
-        ])
+        # LEFT ARM
+        GroupAction([
+            PushRosNamespace('left_arm'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'launch',
+                        'iai_ur_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'robot_ip': left_ip,
+                    'use_fake_hardware': 'false',
+                    'ur_type': 'ur10e',
+                    'tf_prefix': 'left_',
+                    'initial_joint_controller': 'forward_velocity_controller',
+                    'launch_rviz': 'false',
+                    'reverse_port': '50011',
+                    'script_sender_port': '50012',
+                    'trajectory_port': '50013',
+                    'script_command_port': '50014',
+                    'kinematics_params_file': left_kinematics,
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_ur'),
+                        'config',
+                        'ur10e_controllers_left.yaml'
+                    ),
+                }.items()
+            ),
+        ]),
 
-        for ctrl in ["joint_state_broadcaster", "robotiq_activation_controller", "robotiq_gripper_controller"]:
-            nodes.append(Node(package="controller_manager", executable="spawner",
-                              arguments=[ctrl, "-c", f"/{side}_gripper/controller_manager"], 
-                              condition=IfCondition(is_dual)))
+        # RIGHT ARM
+        GroupAction([
+            PushRosNamespace('right_arm'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    os.path.join(
+                        get_package_share_directory('iai_tracy_bringup'),
+                        'launch',
+                        'iai_ur_control.launch.py'
+                    )
+                ]),
+                launch_arguments={
+                    'robot_ip': right_ip,
+                    'use_fake_hardware': 'false',
+                    'ur_type': 'ur10e',
+                    'tf_prefix': 'right_',
+                    'initial_joint_controller': 'forward_velocity_controller',
+                    'launch_rviz': 'false',
+                    'reverse_port': '50001',
+                    'script_sender_port': '50002',
+                    'trajectory_port': '5003',
+                    'script_command_port': '50005',
+                    'kinematics_params_file': right_kinematics,
+                    'controllers_file': os.path.join(
+                        get_package_share_directory('iai_tracy_ur'),
+                        'config',
+                        'ur10e_controllers_right.yaml'
+                    ),
+                }.items()
+            ),
+        ]),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                os.path.join(
+                    get_package_share_directory('robotiq_description'),
+                    'launch',
+                    'robotiq_control.launch.py'
+                )
+            ]),
+            launch_arguments={
+                'is_dual': 'true',
+                'gripper_type': '85',
+                'use_fake_hardware': 'false',
+                'com_port_left': '/dev/ttyUSB1',
+                'com_port_right': '/dev/ttyUSB0',
+                'controller_config': os.path.join(
+                    get_package_share_directory('iai_tracy_bringup'),
+                    'config',
+                    'robotiq_controllers_85.yaml'
+                    ),
+            }.items(),
+        ),
 
-    return LaunchDescription(args + nodes)
+        # Camera
+        #GroupAction([
+        #    PushRosNamespace('tracy_camera'),
+        #    IncludeLaunchDescription(
+        #        PythonLaunchDescriptionSource([
+        #            os.path.join(
+        #                get_package_share_directory('realsense2_camera'),
+        #                'launch',
+        #                'rs_launch.py'
+        #            )
+        #        ]),
+        #        launch_arguments={
+        #             'depth_module.depth_profile': '1280x720x30',  # <<< CHANGE or REMOVE
+        #             'rgb_camera.color_profile': '1280x720x30',  # <<< CHANGE or REMOVE
+        #        #     # Add more launch arguments as needed
+        #        }.items(),
+        #    )
+        #]),
+        # Orbbec Camera
+        IncludeLaunchDescription(
+           PythonLaunchDescriptionSource(
+               os.path.join(orbbec_launch_dir, 'femto_mega.launch.py')
+           ),
+           launch_arguments={
+               'color_width': '1920',
+               'color_height': '1080',
+               'depth_registration': 'True',
+               'enable_colored_point_cloud': 'True',
+               'enable_noise_removal_filter': 'True',
+               'noise_removal_filter_min_diff': '3',
+           }.items()
+        ),
+
+        # JOINT STATE PUBLISHER (merged)
+        Node(
+            package='joint_state_publisher',
+            executable='joint_state_publisher',
+            name='joint_state_publisher',
+            output='screen',
+            parameters=[{
+                'source_list': [
+                    '/left_arm/joint_states',
+                    '/right_arm/joint_states',
+                    '/left_gripper/joint_states',
+                    '/right_gripper/joint_states'
+                ],
+                'rate': 100.0,
+            }]
+        ),
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            remappings=[('/joint_states', '/asdf')],# remapping to asdf because the RSP should only publish static transforms
+            parameters=[{'robot_description': robot_description}]
+        )
+    ])
