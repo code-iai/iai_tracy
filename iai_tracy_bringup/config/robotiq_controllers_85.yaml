@@ -1,3 +1,33 @@
+# SINGLE GRIPPER CONTROLLERS
+
+/controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    robotiq_gripper_controller:
+      type: parallel_gripper_action_controller/GripperActionController
+    robotiq_activation_controller:
+      type: robotiq_controllers/RobotiqActivationController
+
+/robotiq_gripper_controller:
+  ros__parameters:
+    default: true
+    joint: robotiq_85_left_knuckle_joint
+    use_effort_interface: true
+    use_speed_interface: true
+
+/robotiq_activation_controller:
+  ros__parameters:
+    default: true
+
+/joint_state_broadcaster:
+  ros__parameters:
+    extra_interfaces:
+      - object_detection_status
+
+# LEFT GRIPPER CONTROLLERS
+
 /left_gripper/controller_manager:
   ros__parameters:
     update_rate: 100  # Hz
@@ -23,6 +53,8 @@
   ros__parameters:
     extra_interfaces:
       - object_detection_status
+
+# RIGHT GRIPPER CONTROLLERS
 
 /right_gripper/controller_manager:
   ros__parameters:
