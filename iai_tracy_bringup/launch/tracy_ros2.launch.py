@@ -98,48 +98,27 @@ def generate_launch_description():
                 }.items()
             ),
         ]),
-        GroupAction([
-            PushRosNamespace('left_gripper'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    os.path.join(
-                        get_package_share_directory('robotiq_description'),
-                        'launch',
-                        'robotiq_control.launch.py'
-                    )
-                ]),
-                launch_arguments={
-                    'com_port': '/dev/ttyUSB1',
-                    'tf_prefix': 'left_',
-                    'controllers_file': os.path.join(
-                        get_package_share_directory('iai_tracy_bringup'),
-                        'config',
-                        'robotiq_gripper_controllers_left.yaml'
-                    )
-                }.items(),
-            )
-        ]),
-        GroupAction([
-            PushRosNamespace('right_gripper'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    os.path.join(
-                        get_package_share_directory('robotiq_description'),
-                        'launch',
-                        'robotiq_control.launch.py'
-                    )
-                ]),
-                launch_arguments={
-                    'com_port': '/dev/ttyUSB0',
-                    'tf_prefix': 'right_',
-                    'controllers_file': os.path.join(
-                        get_package_share_directory('iai_tracy_bringup'),
-                        'config',
-                        'robotiq_gripper_controllers_right.yaml'
-                    )
-                }.items(),
-            )
-        ]),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                os.path.join(
+                    get_package_share_directory('robotiq_description'),
+                    'launch',
+                    'robotiq_control.launch.py'
+                )
+            ]),
+            launch_arguments={
+                'is_dual': 'true',
+                'gripper_type': '85',
+                'use_fake_hardware': 'false',
+                'com_port_left': '/dev/ttyUSB1',
+                'com_port_right': '/dev/ttyUSB0',
+                'controller_config': os.path.join(
+                    get_package_share_directory('iai_tracy_bringup'),
+                    'config',
+                    'robotiq_controllers_85.yaml'
+                    ),
+            }.items(),
+        ),
 
         # Camera
         #GroupAction([

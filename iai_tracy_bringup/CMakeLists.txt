@@ -6,6 +6,7 @@ project(iai_tracy_bringup)
 
 # Find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(robotiq_description REQUIRED)
 # Install directories (if there are specific resources to install)
 install(DIRECTORY launch config
   DESTINATION share/${PROJECT_NAME}

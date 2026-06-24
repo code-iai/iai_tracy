@@ -21,6 +21,7 @@
   <exec_depend>rviz2</exec_depend>
   <exec_depend>joint_state_publisher_gui</exec_depend>
   <exec_depend>orbbec_camera</exec_depend>
+  <exec_depend>robotiq_description</exec_depend>
   <!-- Add other dependencies as needed -->
   <!-- <exec_depend>some_runtime_dependency</exec_depend> -->
   <!-- <test_depend>gtest</test_depend> -->
