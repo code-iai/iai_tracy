@@ -137,7 +137,7 @@
     <joint name="camera_link_joint" type="fixed">
         <parent link="table"/>
         <child link="camera_link"/>
-        <!-- <origin xyz="0.410542 -0.015143 0.932933" rpy="-0.046277 1.378820 -0.050299"/>: --> 
+        <!-- <origin xyz="0.410542 -0.015143 0.932933" rpy="-0.046277 1.378820 -0.050299"/> --> 
         <origin xyz="0.403282 0.019766 0.881559" rpy="-0.016644 1.135460 -0.005690"/>
     </joint>
 
