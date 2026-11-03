@@ -45,10 +45,10 @@
         </link>
     </xacro:macro>
 
-    <link name="map" />
+    <link name="table_footprint" />
 
     <joint name="table_joint" type="fixed">
-        <parent link="map"/>
+        <parent link="table_footprint"/>
         <child link="table"/>
         <origin xyz="0.0 0.0 0.88" rpy="0.0 0.0 0.0" />
     </joint>
