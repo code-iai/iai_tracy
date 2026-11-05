@@ -176,5 +176,13 @@ def generate_launch_description():
             output='screen',
             remappings=[('/joint_states', '/asdf')],# remapping to asdf because the RSP should only publish static transforms
             parameters=[{'robot_description': robot_description}]
+        ),
+        # Where the table stands in the map; the URDF only describes the robot from the table's footprint up.
+        Node(
+            package='tf2_ros',
+            executable='static_transform_publisher',
+            name='map_to_table_footprint',
+            output='screen',
+            arguments=['--frame-id', 'map', '--child-frame-id', 'table_footprint']
         )
     ])
